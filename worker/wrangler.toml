@@ -1,0 +1,16 @@
+name = "stackscribe-api"
+main = "index.js"
+compatibility_date = "2026-10-13"
+
+[vars]
+OPENROUTER_MODEL = "google/gemma-3-12b-it"
+ALLOWED_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
+APP_URL = "https://github.com/mahmudurrahmanlabib/stackscribe"
+
+[[durable_objects.bindings]]
+name = "RATE_LIMITER"
+class_name = "RateLimiter"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RateLimiter"]

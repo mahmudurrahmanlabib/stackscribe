@@ -59,7 +59,7 @@ wrangler secret put ELEVENLABS_API_KEY
 wrangler secret put OPENROUTER_API_KEY
 ```
 
-Set `OPENROUTER_MODEL`, `ALLOWED_ORIGINS`, and `APP_URL` as Worker variables. `ALLOWED_ORIGINS` is a comma-separated list of exact origins, such as `https://labibrahmanlabib.github.io,https://your-domain.example`; avoid `*` for a public deployment. Deploy with `wrangler deploy`. Add the resulting Worker URL under **Connect your stack** in the app. Never commit API keys or place them in `config.js`.
+Set `OPENROUTER_MODEL`, `ALLOWED_ORIGINS`, and `APP_URL` as Worker variables. `ALLOWED_ORIGINS` is a comma-separated list of exact origins, such as `https://mahmudurrahmanlabib.github.io,https://your-domain.example`; avoid `*` for a public deployment. Deploy with `wrangler deploy`. Add the resulting Worker URL under **Connect your stack** in the app. Never commit API keys or place them in `config.js`.
 
 The freeform team context and transcript are forwarded to the configured open-model provider. Audio is forwarded to ElevenLabs for transcription. StackScribe does not write audio or transcript contents to its database; the Worker keeps daily request counters keyed by the Cloudflare connecting IP to enforce quotas. Provider retention, privacy, and billing terms still apply. ElevenLabs documents a 20% base transcription surcharge when keyterm prompting is used; review current account pricing before enabling live transcription.
 
@@ -83,7 +83,7 @@ Enable GitHub Pages with **GitHub Actions** as the source. The included workflow
 - **Open model:** Gemma by default (configurable to another open-weight model)
 - **Potential additional category:** Best Use of Gemma only if Gemma remains the production model and the write-up demonstrates its use.
 
-The shipped application is new challenge work. Keep the repository history and initial commits within the challenge window. The submission still needs a public production demo and a DEV write-up that explains who would pay for it, what the open model contributes, and what was learned from a real user test.
+The shipped application is new challenge work. Keep the repository history and initial commits within the challenge window. The public Pages demo currently uses the deterministic sample flow. Live speech and model calls require the Worker and provider secrets to be configured. The DEV submission should explain who would pay for it, what the open model contributes, and any real user feedback; do not claim user testing that has not happened.
 
 ## License
 

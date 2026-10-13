@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101310" />
+  <meta name="description" content="Technical voice capture that knows your stack. Dictate support incidents and turn them into clear tickets and handoffs." />
+  <title>StackScribe — Speak in stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="config.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="StackScribe home">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M7 8.5h18M7 16h12M7 23.5h8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M21 19.5 25 23.5 21 27.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>stack<span class="brand-light">scribe</span><small>FIELD NOTES FOR INCIDENTS</small></span>
+      </a>
+
+      <div class="workspace-label">WORKSPACE</div>
+      <button class="workspace-switch" type="button"><span class="workspace-avatar">L</span><span><b>Labib's workspace</b><small>Support engineering</small></span><span class="chevron">⌄</span></button>
+
+      <div class="nav-label">CAPTURE</div>
+      <button class="nav-item selected" type="button"><span class="nav-icon">◉</span> New field note <kbd>⌘ K</kbd></button>
+      <button class="nav-item" type="button" id="historyButton"><span class="nav-icon">↺</span> Recent drafts <span class="nav-count" id="draftCount">01</span></button>
+
+      <div class="sidebar-divider"></div>
+      <div class="nav-label termbook-label">YOUR TERMBOOK <button id="clearTerms" title="Reset to starter terms" aria-label="Reset termbook">↻</button></div>
+      <p class="termbook-help">Teach Scribe the language your team uses.</p>
+      <div class="term-list" id="termList" aria-label="Technical termbook"></div>
+      <form class="term-add" id="termForm"><input id="termInput" maxlength="49" aria-label="Add a technical term" placeholder="Add a term…" autocomplete="off" /><button aria-label="Add term" type="submit">+</button></form>
+      <div class="sidebar-note"><span class="note-orb"></span><span><b>Keyterms active</b><small>Applied before transcription</small></span></div>
+      <div class="sidebar-bottom"><span class="user-avatar">LR</span><span><b>Labib Rahman</b><small>Personal workspace</small></span><button id="settingsButton" class="settings-button" aria-label="Settings" title="Settings">⚙</button></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar"><div class="crumb">Workspace <span>/</span> <b>New field note</b></div><div class="top-actions"><span class="connection-pill" id="connectionPill"><i></i><span id="connectionLabel">Demo mode</span></span><button class="icon-button" id="helpButton" title="About StackScribe" aria-label="About StackScribe">?</button><button class="upgrade-button" id="setupButton">Connect your stack <span>↗</span></button></div></header>
+
+      <div class="content-wrap">
+        <section class="intro-row">
+          <div><div class="eyebrow"><span class="eyebrow-line"></span> TECHNICAL DICTATION, WITH CONTEXT</div><h1>Get it out of your head.<br /><em>Into the right hands.</em></h1><p class="intro-copy">Talk through the incident like you would to a teammate. StackScribe knows your stack and turns the rough note into work your team can use.</p></div>
+          <div class="workflow-stamp"><div class="stamp-ring">VOICE<br /><span>TO</span><br />SIGNAL</div><div class="stamp-caption">ELEVENLABS SCRIBE <i>×</i> OPEN MODEL</div></div>
+        </section>
+
+        <section class="workbench">
+          <div class="capture-column">
+            <div class="section-heading"><div><span class="step-num">01</span><h2>Capture the signal</h2></div><span class="secure-label" title="Audio is sent to ElevenLabs for transcription. StackScribe does not store it."><span>◈</span> NOT STORED BY STACKSCRIBE</span></div>
+            <div class="capture-card" id="dropZone">
+              <div class="capture-top"><span class="live-indicator"><i></i><span id="captureStatus">READY TO CAPTURE</span></span><button class="more-button" id="demoButton" type="button">Try sample ↗</button></div>
+              <div class="record-center">
+                <div class="sound-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <button class="record-button" id="recordButton" aria-label="Start voice recording"><span class="record-inner"></span><span class="record-halo"></span></button>
+                <div class="record-caption" id="recordCaption">Click to start speaking</div>
+                <div class="record-subcaption" id="recordSubcaption">Talk naturally. We’ll keep the technical detail.</div>
+              </div>
+              <div class="capture-footer"><button id="uploadButton" class="text-action" type="button"><span>↑</span> Upload audio</button><span class="capture-limit">MP3 · WAV · M4A · up to 10 MB</span><input id="audioFile" type="file" accept="audio/*" hidden /></div>
+            </div>
+            <div class="transcript-panel" id="transcriptPanel" hidden><div class="transcript-heading"><span><i></i> SCRIBE TRANSCRIPT</span><span id="transcriptMeta">Editable before drafting</span></div><textarea id="transcriptInput" aria-label="Editable speech transcript" placeholder="Your transcript will appear here…"></textarea></div>
+            <div class="context-row"><div class="context-label"><span class="context-icon">⌘</span><span><b>Team context</b><small>Optional · gives the model useful boundaries</small></span></div><textarea id="contextInput" rows="2" placeholder="e.g. FlyWP manages the server; don't suggest editing Nginx config without a Support PIN."></textarea></div>
+            <div class="termbar"><span>LISTENING FOR</span><div class="termbar-chips" id="activeTerms"></div><button id="manageTerms" type="button">Edit termbook <span>↗</span></button></div>
+          </div>
+
+          <div class="output-column">
+            <div class="section-heading"><div><span class="step-num">02</span><h2>Shape the handoff</h2></div><span class="draft-state" id="draftState"><i></i> Waiting for audio</span></div>
+            <div class="output-card">
+              <div class="format-select" role="tablist" aria-label="Output format">
+                <button class="format-tab active" data-format="ticket" role="tab" aria-selected="true">Support ticket</button>
+                <button class="format-tab" data-format="engineering" role="tab" aria-selected="false">Eng handoff</button>
+                <button class="format-tab" data-format="customer" role="tab" aria-selected="false">Customer reply</button>
+              </div>
+              <div class="output-body">
+                <div class="empty-output" id="emptyOutput"><div class="empty-icon">⌁</div><b>Your structured note will land here.</b><span>Record a note or load the sample to see the workflow.</span></div>
+                <div class="draft-content" id="draftContent" hidden>
+                  <div class="draft-title-row"><span class="ticket-mark">▤</span><input id="draftTitle" aria-label="Draft title" value="" /></div>
+                  <textarea id="draftBody" aria-label="Draft content" spellcheck="false"></textarea>
+                  <div class="review-note" id="reviewNote"><span>!</span> Review technical details before sending. Unknowns are flagged.</div>
+                </div>
+              </div>
+              <div class="output-footer"><span class="model-badge"><span class="model-dot"></span><span id="modelName">OPEN MODEL · DEMO</span></span><button class="copy-button" id="copyButton" type="button" disabled>Copy handoff <span>⌘ C</span></button></div>
+            </div>
+            <button class="draft-button" id="draftButton" type="button" disabled><span>✳</span> Draft support ticket <span class="button-arrow">→</span></button>
+            <div class="trust-line"><span>◈</span> No ticket is sent automatically. You review and copy.</div>
+          </div>
+        </section>
+
+        <section class="bottom-strip"><div class="bottom-icon">⌁</div><div><b>Built for the messy middle of technical support.</b><span>Speech becomes a transcript. Your terminology guides it. An open model shapes the handoff. You stay in control.</span></div><div class="strip-status"><i></i> Scribe keyterms ready</div></section>
+        <footer class="page-footer"><span>STACKSCRIBE <b>·</b> OPEN SOURCE AI CHALLENGE / WEEK 02</span><span>YOUR STACK. YOUR WORDS. YOUR CALL.</span></footer>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <section class="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <button class="modal-close" id="closeSettings" aria-label="Close">×</button>
+      <div class="eyebrow"><span class="eyebrow-line"></span> DEPLOYMENT</div><h2 id="settingsTitle">Connect your stack</h2>
+      <p>StackScribe keeps provider keys on the server. Point the app to your deployed API Worker; never put provider secrets in this page.</p>
+      <label for="apiBaseInput">API Worker URL</label><input id="apiBaseInput" placeholder="https://stackscribe-api.yourname.workers.dev" />
+      <div class="modal-actions"><button class="secondary-button" id="saveApiBase">Save endpoint</button><a href="README.md" target="_blank" rel="noreferrer">Deployment guide ↗</a></div>
+      <div class="modal-footnote">For local development, run the Worker on <code>http://localhost:8787</code>. Provider API keys belong in Worker secrets.</div>
+    </section>
+  </div>
+</body>
+</html>

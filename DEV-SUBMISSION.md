@@ -1,5 +1,5 @@
 ---
-title: "StackScribe: technical voice notes into support-ready handoffs"
+title: "StackScribe: technical dictation that keeps the important bits intact"
 published: false
 tags: devchallenge, hf26challenge, elevenlabs, gemma
 ---
@@ -8,48 +8,42 @@ tags: devchallenge, hf26challenge, elevenlabs, gemma
 
 ## What I Built
 
-StackScribe turns a spoken support or incident note into a support ticket, engineering handoff, or customer update. It is for support engineers, DevOps teams, and small product teams who need to capture incidents quickly without losing exact details such as `PHP-FPM`, `wp-cli`, hostnames, error messages, versions, and timestamps.
+I built **StackScribe**, a voice-first way to turn a rough support or incident note into a support ticket, engineering handoff, or customer update. It is for support engineers, DevOps teams, and small software companies that need to document incidents quickly without losing the details that make the note useful: `PHP-FPM`, `wp-cli`, `php:9000`, error strings, versions, hostnames, and timestamps.
 
-The team keeps a small termbook of product names and technical vocabulary. StackScribe sends those terms to ElevenLabs Scribe v2 as keyterm prompts, then lets the user review and correct the transcript. A Gemma model structures the note into the selected format. The user reviews and copies the result; StackScribe does not file a ticket or send a customer message automatically.
+The team keeps its own technical termbook. StackScribe passes those terms to ElevenLabs Scribe v2 as keyterm prompts, then lets the engineer review the transcript before drafting. Gemma turns the corrected note into the selected handoff format. The result stays editable, and a person has to review and copy it; the app does not file a ticket or send a message automatically.
 
-The people most likely to pay are small software companies and support consultancies where engineers spend time turning voice notes into usable tickets and incident handoffs. The useful outcome is faster documentation with fewer lost technical details, while keeping a human approval step before anything enters a system of record.
+The likely customer is a small software company or support consultancy whose engineers repeatedly translate voice notes into tickets and incident updates. The product would save time on that documentation while reducing the chance that an exact error, identifier, or operational boundary gets lost.
 
 ## Demo
 
-**Demo video or deployed URL:** [add after publishing the live demo]
+[Try the live StackScribe demo](https://mahmudurlabib.com/stackscribe/). Click **Try sample**, then **Draft support ticket** to see the workflow.
 
-The repository includes a deterministic sample flow that can be tried without API credentials. Live transcription and model drafting require the API Worker and provider credentials described in the README. I will replace this note with a working demo link or a short recording before submitting.
+The public demo currently runs its deterministic sample flow. Live transcription and model drafting are implemented in the project but need a configured API Worker and provider credentials; the public demo does not yet call those services. I am stating that limit clearly so the demo does not imply a live provider connection that is not configured.
 
 ## Code
 
-**Repository:** [add public GitHub repository URL]
+[Public GitHub repository](https://github.com/mahmudurrahmanlabib/stackscribe)
 
-The front end is static HTML, CSS, and JavaScript. The Cloudflare Worker keeps provider credentials server-side, validates requests, restricts CORS origins, and applies daily request limits. The project is original work started during the Week 2 challenge window.
+The front end is static HTML, CSS, and JavaScript. A Cloudflare Worker holds provider keys, checks inputs and allowed origins, and applies daily request limits. Audio and transcript contents are not saved to an application database.
 
 ## How I Built It
 
-The speech path uses ElevenLabs Scribe v2 with a team-maintained keyterm list. The handoff path calls an open-weight model through an OpenAI-compatible endpoint; Gemma 3 12B Instruct is the default. The prompt preserves technical tokens, separates observations from hypotheses, marks unclear details for verification, and forbids invented root causes or unsupported severity claims.
+The speech path uses ElevenLabs Scribe v2 with a user-editable list of technical keyterms. The drafting path calls an OpenAI-compatible endpoint, with Gemma 3 12B Instruct as the default open-weight model. The model prompt preserves exact tokens, separates observed facts from hypotheses, flags uncertain details, and avoids inventing a root cause, severity, or ETA.
 
-I used a small format-specific prompt for support tickets, engineering handoffs, and customer updates. The generated draft remains editable. API keys stay in Worker secrets; audio and transcripts are not written to an application database. The Worker keeps request counters for rate limiting.
+There are three outputs: a support ticket, an engineering handoff, and a customer update. Each has different constraints: an internal incident handoff can keep log strings and investigation requests, while a customer update avoids exposing internal logs or unsupported promises. The sample is deterministic, and five Worker tests cover the request validation, provider payloads, output parsing, and rate limits.
 
 ## Why Does Open Innovation Matter?
 
-The open-weight model is the part that reshapes the transcript into a useful artifact. Keeping that model choice configurable lets a small team select a model based on its own cost, hosting, and privacy requirements instead of locking the product to one closed model API. A team could move inference to infrastructure it controls or swap in another open-weight model without changing the voice capture workflow.
+Technical support has team-specific vocabulary and policy boundaries. An open-weight model gives a team room to change the drafting model, host inference on infrastructure it controls, and tune the prompt to its own support workflow without rebuilding the voice capture path around one closed model provider. It also makes the model choice a deployment decision: a small team can begin with a hosted open model and move to self-hosted inference if its privacy, cost, or volume needs change.
 
-The speech recognition is a paid hosted service, so this is not an offline or fully self-hosted product. ElevenLabs provides the transcription and technical term prompting; the open model provides the editable handoff structure. That separation keeps the product replaceable where model choice matters while using a specialist speech service for voice input.
+This is not a fully offline product: the current speech-recognition design uses ElevenLabs as a hosted service. The open model is responsible for shaping the transcript into a useful artifact, while ElevenLabs handles speech-to-text and keyterm prompting. That split lets the product use a specialist speech service while keeping the reasoning and formatting layer replaceable.
 
 ## My Agent Session
 
-Optional. Add a DevRelay session link if one is available.
+Optional. I did not save a DevRelay session for this build.
 
 ## Prize Categories
 
 - Best Use of ElevenLabs
 - Best Use of Gemma
 
-## Before Publishing
-
-- Replace the demo and repository placeholders with working public links.
-- Confirm the deployed Worker is configured with ElevenLabs and Gemma, then test an actual audio note end to end.
-- Add one real user test and report what happened; do not claim a user or payment that has not happened.
-- Keep `published: false` until the links and live demo are ready.
